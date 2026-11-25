@@ -3,7 +3,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const root = __dirname;
-const files = {'/':'index.html','/index.html':'index.html','/style.css':'style.css','/core.js':'core.js','/scenes.js':'scenes.js','/app.js':'app.js'};
+const files = {'/':'index.html','/index.html':'index.html','/style.css':'style.css','/core.js':'core.js','/scenes.js':'scenes.js','/crt.js':'crt.js','/app.js':'app.js'};
 const mime = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8'};
 const server = http.createServer((req,res) => {
   const file = files[new URL(req.url,'http://localhost').pathname];

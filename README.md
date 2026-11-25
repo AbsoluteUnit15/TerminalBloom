@@ -34,7 +34,15 @@ You can also open `index.html` directly for idle art and local audio playback; t
 - **Scene** selects one of six distinct graphics. **Next scene** moves through them. Optional **Auto-switch** changes the scene every 30 seconds of visible, unfrozen playback time; it starts off. All scenes use the same live audio input, sensitivity, motion and density controls. Scene changes are immediate cuts.
 - The composition fills the same static viewport in every scene, with no social overlays or time limit.
 
-## Graphic scenes
+## CRT screen effects
+
+- **Curved CRT glass** enables actual shader barrel distortion across the glyphs and scanlines, rounded tube corners, an edge vignette, subtle glass reflection and a phosphor halo. Turn it off for a flat screen.
+- **CRT scanlines** has a separate **Scanline intensity** slider, set stronger by default. Four-pixel scanline spacing and a phosphor mask make the texture more visible without blurring the glyphs.
+- **Bass degauss** triggers an electromagnetic-style wobble, RGB separation and rainbow magnetic shimmer on large bass onsets. Moving rainbow lobes tint the glyphs and cast a faint iridescent haze, like a magnet affecting a CRT's colour purity. The shimmer lingers briefly as the wobble settles, then fades completely. A moving bass baseline and a 1.4-second cooldown prevent continuous retriggering on sustained bass. Raise **Sensitivity** if your recording is too quiet to trigger it. **Degauss strength** adjusts the combined effect; **Test degauss** previews it without music.
+- Degauss is off initially for reduced-motion preferences. Freeze art also freezes its motion. Scanlines and curved glass remain independently adjustable.
+- Effects use a local WebGL fragment shader. If WebGL is unavailable, the app retains Canvas art, stronger Canvas scanlines and rounded glass edges, while the degauss controls are disabled. If the GPU context is lost, the Canvas image is shown; refreshing can restore the shader.
+
+## Scene guide
 
 | Scene | Appearance | Music response |
 | --- | --- | --- |
@@ -74,6 +82,6 @@ Controls are keyboard accessible, status updates are announced, and the canvas h
 
 ## Verify / edit
 
-No build step. Edit `index.html`, `style.css`, `core.js`, `scenes.js` or `app.js`, then refresh. After updating from the initial version, restart the local server to serve the new scenes file, then refresh the page.
+No build step. Edit `index.html`, `style.css`, `core.js`, `scenes.js`, `crt.js` or `app.js`, then refresh. After updating from an earlier version, restart the local server to serve new script files, then refresh the page.
 
 Run `node --test tests/*.test.cjs` for FFT band separation, silence/gain limits, hypercube geometry, scene output, and browser-capture connection/cleanup checks. Capture lifecycle checks use simulated browser streams; actual tab selection and audio availability depend on the browser and require a manual sharing-picker check.

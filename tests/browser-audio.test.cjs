@@ -7,7 +7,7 @@ function harness(getDisplayMedia){
   const el=id=>{if(!elements.has(id))elements.set(id,{value:id==='motion'?'.7':'1.3',checked:true,paused:true,src:'',setAttribute(k,v){this[k]=v;},getContext(){return {};},pause(){this.paused=true;},focus(){}});return elements.get(id);};
   const analyser={frequencyBinCount:2048};
   const context={state:'running',sampleRate:48000,createAnalyser:()=>analyser,resume:async()=>{},createMediaStreamSource:s=>(connected={stream:s,connect(n){this.destination=n;},disconnect(){this.disconnected=true;}})};
-  const sandbox={document:{getElementById:el,addEventListener(){},body:{classList:{contains:()=>false}}},navigator:{mediaDevices:{getDisplayMedia}},window:{AudioContext:function(){return context;},addEventListener:(name,cb)=>events[name]=cb},MediaStream:class{constructor(tracks){this.tracks=tracks;}getTracks(){return this.tracks;}getAudioTracks(){return this.tracks;}},TerminalMath:require('../core.js'),TerminalScenes:require('../scenes.js'),performance:{now:()=>0},matchMedia:()=>({matches:false}),ResizeObserver:class{observe(){}},requestAnimationFrame(){},Uint8Array,URL,console};
+  const sandbox={document:{getElementById:el,addEventListener(){},body:{classList:{contains:()=>false}}},navigator:{mediaDevices:{getDisplayMedia}},window:{AudioContext:function(){return context;},addEventListener:(name,cb)=>events[name]=cb},MediaStream:class{constructor(tracks){this.tracks=tracks;}getTracks(){return this.tracks;}getAudioTracks(){return this.tracks;}},TerminalCRT:require('../crt.js'),TerminalMath:require('../core.js'),TerminalScenes:require('../scenes.js'),performance:{now:()=>0},matchMedia:()=>({matches:false}),ResizeObserver:class{observe(){}},requestAnimationFrame(){},Uint8Array,URL,console};
   vm.runInNewContext(fs.readFileSync(require.resolve('../app.js'),'utf8'),sandbox);
   return {el,events,get connected(){return connected;},analyser};
 }
@@ -60,4 +60,3 @@ test('browser Stop sharing and page exit release capture',async()=>{
     assert.equal(h.el('browserAudio')['aria-pressed'],'false');
   }
 });
-

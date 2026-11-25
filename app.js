@@ -15,6 +15,12 @@
   let density='medium',speed=Number($('motion').value),gain=Number($('sensitivity').value);
   let crt=true,hud=true;
   const setStatus = message => {$('status').textContent=message;};
+  const crtRenderer=new TerminalCRT.Renderer($('crtOutput'),canvas),bassPulse=new TerminalCRT.BassPulse();
+  const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let glass=true,scanIntensity=Number($('scanIntensity').value),degauss=!reducedMotion,degaussStrength=Number($('degaussStrength').value);
+  $('degauss').checked=degauss;
+  if(crtRenderer.available)$('stage').classList.add('shader-on');
+  else{$('degauss').disabled=true;$('degauss').checked=false;$('degauss').title='Degauss needs WebGL. Enable browser hardware acceleration, then reload.';degauss=false;}
 
   function resize() {
     const rect=canvas.getBoundingClientRect();width=Math.max(1,rect.width);height=Math.max(1,rect.height);
@@ -92,10 +98,11 @@
     for(let i=0;i<grid.length;i++)if(grid[i]) {
       ctx.drawImage(atlas,(grid[i]-1)*aw,colors[i]*ah,aw,ah,(i%cols)*cellW,Math.floor(i/cols)*cellH,cellW,cellH);
     }
-    if(hud)drawHUD(t);
-    if(crt) {
-      ctx.fillStyle='rgba(0,0,0,.17)';for(let y=1;y<height;y+=3)ctx.fillRect(0,y,width,1);
+    if(hud){ctx.save();if(glass){ctx.translate(width*.055,height*.06);ctx.scale(.89,.88);}drawHUD(t);ctx.restore();}
+    if(crt&&!crtRenderer.available) {
+      ctx.fillStyle=`rgba(0,0,0,${scanIntensity*.65})`;for(let y=1;y<height;y+=4)ctx.fillRect(0,y,width,2);
     }
+    crtRenderer.render({width,height,glass,scan:crt?scanIntensity:0,pulse:bassPulse.amount*degaussStrength,age:bassPulse.age});
   }
   function drawHUD(t) {
     ctx.font='10px Consolas, monospace';ctx.textBaseline='top';ctx.fillStyle=palette[0];
@@ -131,7 +138,7 @@
     // Cap rendering near 60fps even on high refresh rate displays.
     if(now-lastDraw<15)return;
     const dt=Math.min((now-last)/1000,.06);last=now;lastDraw=now;
-    if(!frozen){sample(dt);clock+=dt*speed;cubeTime+=dt*speed*(.65+energy.mid*.45);sceneTime+=dt;
+    if(!frozen){sample(dt);bassPulse.update(energy.bass,dt,degauss);clock+=dt*speed;cubeTime+=dt*speed*(.65+energy.mid*.45);sceneTime+=dt;
       if($('autoscene').checked&&sceneTime>=30)nextScene();}
     frames++;fpsClock+=dt;if(fpsClock>=.5){fps=frames/fpsClock;frames=0;fpsClock=0;}
     if(atlas)drawArt(clock);
@@ -261,6 +268,12 @@
   $('nextScene').onclick=nextScene;
   $('autoscene').onchange=()=>{sceneTime=0;};
   $('crt').onchange=()=>{crt=$('crt').checked;};$('hud').onchange=()=>{hud=$('hud').checked;};
+  $('scanIntensity').oninput=()=>{scanIntensity=Number($('scanIntensity').value);};
+  $('glass').onchange=()=>{glass=$('glass').checked;$('stage').classList.toggle('crt-glass',glass);};
+  $('degauss').onchange=()=>{degauss=$('degauss').checked&&crtRenderer.available;if(!degauss)bassPulse.amount=0;};
+  $('degaussStrength').oninput=()=>{degaussStrength=Number($('degaussStrength').value);};
+  $('testDegauss').disabled=!crtRenderer.available;
+  $('testDegauss').onclick=()=>{if(crtRenderer.available){degauss=true;$('degauss').checked=true;bassPulse.age=0;bassPulse.amount=1;bassPulse.cooldown=1.4;}};
   function syncFreeze(){ $('freeze').textContent=frozen?'Resume art':'Freeze art';$('freeze').setAttribute('aria-pressed',String(frozen)); }
   function toggleFreeze(){frozen=!frozen;syncFreeze();}syncFreeze();
   if(frozen)setStatus('Reduced motion preference detected · Art is frozen. Choose Resume art to animate.');
