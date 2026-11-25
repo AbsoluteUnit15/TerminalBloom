@@ -202,6 +202,10 @@
     setStatus(messages[error.name]||error.message||'Audio could not start. Try another file or input.');
   }
   $('fileButton').onclick=()=>$('file').click();
+  $('localAudioToggle').onclick=()=>{
+    const panel=$('localAudioPanel');panel.hidden=!panel.hidden;
+    $('localAudioToggle').setAttribute('aria-expanded',String(!panel.hidden));
+  };
   $('file').onchange=async()=>{
     const file=$('file').files[0];if(!file)return;
     const ticket=++operation;

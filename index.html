@@ -24,21 +24,27 @@
     <section id="controls" aria-label="Art and audio controls">
       <div class="source-row">
         <div class="source-buttons">
-          <button id="fileButton" class="primary">Open audio</button>
-          <input id="file" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac" hidden>
+          <button id="browserAudio" class="primary" aria-pressed="false">Use PC / tab audio</button>
+          <button id="localAudioToggle" aria-expanded="false" aria-controls="localAudioPanel">Local audio</button>
           <button id="mic" aria-pressed="false">Use microphone</button>
-          <button id="browserAudio" aria-pressed="false">Use PC / tab audio</button>
           <button id="idle">Idle mode</button>
         </div>
         <div class="view-buttons"><button id="freeze" aria-pressed="false">Freeze art</button><button id="fullscreen">Full screen</button><button id="hide">Hide controls</button></div>
       </div>
-      <div class="transport">
+      <div id="localAudioPanel" hidden>
+        <div class="local-file-row">
+          <button id="fileButton">Open audio file</button>
+          <input id="file" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac" hidden>
+          <span>Play a file from your computer.</span>
+        </div>
+        <div class="transport">
         <button id="play" disabled>Play</button>
         <span id="track">No audio loaded</span>
         <label class="seek-label"><span class="sr-only">Track position</span><input id="seek" aria-label="Track position" type="range" min="0" max="1000" value="0" disabled></label>
         <span id="time">0:00 / 0:00</span>
         <label class="volume">Volume <input id="volume" type="range" min="0" max="1" step="0.01" value="0.7"></label>
         <label class="loop"><input id="loop" type="checkbox" checked> Loop</label>
+        </div>
       </div>
       <div class="settings">
         <label>Scene <select id="scene"><option value="bloom">Bloom &amp; hypercube</option><option value="tunnel">Hyperspace tunnel</option><option value="terrain">Signal terrain</option><option value="rain">Glyph rain</option><option value="ribbons">Harmonic ribbons</option><option value="swarm">Orbital swarm</option></select></label>
@@ -55,7 +61,7 @@
         <button id="testDegauss">Test degauss</button>
         <label><input id="hud" type="checkbox" checked> Telemetry</label>
       </div>
-      <div class="footer"><p id="status" role="status" aria-live="polite">Idle animation · Open an audio file or connect your microphone.</p><span>H controls &nbsp; F full screen &nbsp; Space freeze</span></div>
+      <div class="footer"><p id="status" role="status" aria-live="polite">Connect PC / tab audio to react to what’s playing. Idle animation runs until connected.</p><span>H controls &nbsp; F full screen &nbsp; Space freeze</span></div>
     </section>
   </main>
   <audio id="audio" preload="metadata" loop></audio>

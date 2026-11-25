@@ -60,3 +60,15 @@ test('browser Stop sharing and page exit release capture',async()=>{
     assert.equal(h.el('browserAudio')['aria-pressed'],'false');
   }
 });
+test('local audio disclosure reveals the player without interrupting PC audio',async()=>{
+  const stream=capture(),h=harness(async()=>stream);
+  h.el('localAudioPanel').hidden=true;
+  await h.el('browserAudio').onclick();
+  h.el('localAudioToggle').onclick();
+  assert.equal(h.el('localAudioPanel').hidden,false);
+  assert.equal(h.el('localAudioToggle')['aria-expanded'],'true');
+  h.el('localAudioToggle').onclick();
+  assert.equal(h.el('localAudioPanel').hidden,true);
+  assert.equal(h.el('localAudioToggle')['aria-expanded'],'false');
+  assert.ok(stream.getTracks().every(t=>!t.stopped));
+});

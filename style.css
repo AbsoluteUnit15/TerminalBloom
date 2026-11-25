@@ -9,3 +9,5 @@
 #stage.shader-on #crtOutput{display:block}
 #stage.shader-on #art{opacity:0}
 #stage.crt-glass:fullscreen{border-radius:2.5% / 4%;box-shadow:none}
+#localAudioPanel[hidden]{display:none}
+.local-file-row{display:flex;align-items:center;flex-wrap:wrap;gap:14px;padding-top:18px;color:var(--muted)}
