@@ -3,9 +3,9 @@
 
 /* Curved tube glass stays inside the stage, including browser full screen. */
 #stage{border:0}
-#stage.crt-glass{border-radius:5% / 8%}
+#stage.crt-glass{border-radius:3% / 5%}
 #stage.crt-glass::after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(ellipse at center,transparent 58%,#0006 100%)}
 #crtOutput{display:none;position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #stage.shader-on #crtOutput{display:block}
 #stage.shader-on #art{opacity:0}
-#stage.crt-glass:fullscreen{border-radius:4% / 6%;box-shadow:none}
+#stage.crt-glass:fullscreen{border-radius:2.5% / 4%;box-shadow:none}

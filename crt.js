@@ -24,7 +24,7 @@
     void main(){
       vec2 p=v_uv*2.-1.;
       // Inverse barrel mapping bows the entire glyph field and scanlines.
-      vec2 q=p*(1.+u_glass*.075*p.yx*p.yx);
+      vec2 q=p*(1.+u_glass*.045*p.yx*p.yx);
       float wave=sin(u_age*22.);
       q+=u_pulse*.042*wave*vec2(sin(p.y*8.+u_age*11.),sin(p.x*6.-u_age*9.));
       vec2 uv=q*.5+.5;
