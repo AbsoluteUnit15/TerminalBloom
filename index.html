@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Terminal Bloom — music-reactive generative art</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="core.js"></script>
+  <script defer src="scenes.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <main>
+    <header class="masthead">
+      <div><h1>Terminal Bloom<span aria-hidden="true">_</span></h1><p>A living signal, written in light.</p></div>
+      <div class="edition">Generative terminal instrument<br><span>Canvas / Web Audio / ∞</span></div>
+    </header>
+    <section id="stage" aria-label="Generative art display">
+      <canvas id="art" role="img" aria-label="Animated multicolour ASCII rose curves, circular lattices, drifting glyphs and a rotating four-dimensional hypercube"></canvas>
+    </section>
+    <section id="controls" aria-label="Art and audio controls">
+      <div class="source-row">
+        <div class="source-buttons">
+          <button id="fileButton" class="primary">Open audio</button>
+          <input id="file" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac" hidden>
+          <button id="mic" aria-pressed="false">Use microphone</button>
+          <button id="browserAudio" aria-pressed="false">Use PC / tab audio</button>
+          <button id="idle">Idle mode</button>
+        </div>
+        <div class="view-buttons"><button id="freeze" aria-pressed="false">Freeze art</button><button id="fullscreen">Full screen</button><button id="hide">Hide controls</button></div>
+      </div>
+      <div class="transport">
+        <button id="play" disabled>Play</button>
+        <span id="track">No audio loaded</span>
+        <label class="seek-label"><span class="sr-only">Track position</span><input id="seek" aria-label="Track position" type="range" min="0" max="1000" value="0" disabled></label>
+        <span id="time">0:00 / 0:00</span>
+        <label class="volume">Volume <input id="volume" type="range" min="0" max="1" step="0.01" value="0.7"></label>
+        <label class="loop"><input id="loop" type="checkbox" checked> Loop</label>
+      </div>
+      <div class="settings">
+        <label>Scene <select id="scene"><option value="bloom">Bloom &amp; hypercube</option><option value="tunnel">Hyperspace tunnel</option><option value="terrain">Signal terrain</option><option value="rain">Glyph rain</option><option value="ribbons">Harmonic ribbons</option><option value="swarm">Orbital swarm</option></select></label>
+        <button id="nextScene">Next scene</button>
+        <label><input id="autoscene" type="checkbox"> Auto-switch (30s)</label>
+        <label>Sensitivity <input id="sensitivity" type="range" min="0.3" max="3" value="1.3" step="0.05"></label>
+        <label>Motion <input id="motion" type="range" min="0.1" max="1.8" value="0.7" step="0.05"></label>
+        <label>Glyph density <select id="density"><option value="low">Light</option><option value="medium" selected>Balanced</option><option value="high">Dense</option></select></label>
+        <label><input id="crt" type="checkbox" checked> CRT scanlines</label>
+        <label><input id="hud" type="checkbox" checked> Telemetry</label>
+      </div>
+      <div class="footer"><p id="status" role="status" aria-live="polite">Idle animation · Open an audio file or connect your microphone.</p><span>H controls &nbsp; F full screen &nbsp; Space freeze</span></div>
+    </section>
+  </main>
+  <audio id="audio" preload="metadata" loop></audio>
+</body>
+</html>
