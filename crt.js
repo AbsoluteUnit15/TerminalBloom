@@ -23,8 +23,9 @@
     }
     void main(){
       vec2 p=v_uv*2.-1.;
-      // Inverse barrel mapping bows the entire glyph field and scanlines.
-      vec2 q=p*(1.+u_glass*.045*p.yx*p.yx);
+      // Boundary-preserving curvature keeps the full viewport usable.
+      // Distortion eases to zero at each corresponding screen edge.
+      vec2 q=p*(1.+u_glass*.018*p.yx*p.yx*(1.-p*p));
       float wave=sin(u_age*22.);
       q+=u_pulse*.042*wave*vec2(sin(p.y*8.+u_age*11.),sin(p.x*6.-u_age*9.));
       vec2 uv=q*.5+.5;
@@ -48,7 +49,7 @@
       color*=1.-u_scan*.62*pow(scan,3.);
       float mask=.96+.04*cos(gl_FragCoord.x*2.0943951);
       color*=mix(1.,mask,u_glass);
-      float vignette=1.-u_glass*.38*smoothstep(.3,1.5,dot(p,p));
+      float vignette=1.-u_glass*.12*smoothstep(.6,1.8,dot(p,p));
       color*=vignette;
       // Restrained phosphor halo from immediate neighbours; retains crisp glyphs.
       vec2 px=1./u_size;

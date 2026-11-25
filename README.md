@@ -32,12 +32,12 @@ You can also open `index.html` directly for idle art and local audio playback; t
 - **Sensitivity** changes audio response, **Motion** changes mathematical animation speed, and **Glyph density** adjusts detail and rendering cost. CRT scanlines and HUD telemetry can be toggled independently.
 - **Freeze art** stops geometric motion and audio-dependent deformation; audio playback continues. Resume art restores live response.
 - **H** hides/restores the controls without changing the artwork size. **F** enters/exits browser full screen, including when a button or slider has focus. **Space** toggles Freeze art when the artwork/page has focus; on buttons and inputs it keeps the native control behaviour. Shortcuts do not intercept typing or scene selection. Escape leaves full screen, or restores hidden controls in the normal view.
-- **Scene** selects one of six distinct graphics. **Next scene** moves through them. Optional **Auto-switch** changes the scene every 30 seconds of visible, unfrozen playback time; it starts off. All scenes use the same live audio input, sensitivity, motion and density controls. Scene changes are immediate cuts.
+- **Scene** selects one of fourteen distinct graphics. **Next scene** moves through them. Optional **Auto-switch** changes the scene every 30 seconds of visible, unfrozen playback time; it starts off. All scenes use the same live audio input, sensitivity, motion and density controls. Scene changes are immediate cuts.
 - The composition fills the same static viewport in every scene, with no social overlays or time limit.
 
 ## CRT screen effects
 
-- **Curved CRT glass** enables actual shader barrel distortion across the glyphs and scanlines, rounded tube corners, an edge vignette, subtle glass reflection and a phosphor halo. Turn it off for a flat screen.
+- **Curved CRT glass** enables subtle shader curvature across the glyphs and scanlines, gently rounded corners, a light edge vignette, glass reflection and a phosphor halo. The mapping preserves the viewport boundaries so curvature does not introduce black edge bands or shrink the image. Turn it off for a flat screen.
 - **CRT scanlines** has a separate **Scanline intensity** slider, set stronger by default. Four-pixel scanline spacing and a phosphor mask make the texture more visible without blurring the glyphs.
 - **Bass degauss** triggers an electromagnetic-style wobble, RGB separation and rainbow magnetic shimmer on large bass onsets. Moving rainbow lobes tint the glyphs and cast a faint iridescent haze, like a magnet affecting a CRT's colour purity. The shimmer lingers briefly as the wobble settles, then fades completely. A moving bass baseline and a 1.4-second cooldown prevent continuous retriggering on sustained bass. Raise **Sensitivity** if your recording is too quiet to trigger it. **Degauss strength** adjusts the combined effect; **Test degauss** previews it without music.
 - Degauss is off initially for reduced-motion preferences. Freeze art also freezes its motion. Scanlines and curved glass remain independently adjustable.
@@ -53,6 +53,24 @@ You can also open `index.html` directly for idle art and local audio playback; t
 | Glyph rain | Multicolour streams of cascading terminal symbols | Bass lengthens trails; mids shift columns; treble increases symbol turnover |
 | Harmonic ribbons | Woven Lissajous curves filling a wide field | Bass widens curves; mids open the weave; treble ripples the ribbons |
 | Orbital swarm | A rotating seven-arm galaxy of glyph particles | Bass expands the swarm; mids bend the arms; treble changes particle accents |
+| Tron grid | Cyan/orange perspective arena, a neon disc and light-cycle trails | Bass expands the disc; mids extend trails; treble raises light fins |
+| Deep space | Outward-moving stars with short warp streaks | Bass stretches streaks; treble changes star glyphs |
+| Neon skyline | Layered towers, illuminated windows and a neon orbital sun | Bass shifts building heights; mids expand the sun; treble changes windows |
+| Radar sweep | Green phosphor rings and a rotating scanner with target blips | Bass expands targets; mids extend persistence; treble enlarges blips |
+| Glyph mandala | Interlocking rotating rings of Japanese glyphs | Bass expands rings; mids deform secondary detail; treble changes symbols |
+| Phosphor plasma | Organic interference contours with Korean jamo | Bass shifts the contours; mids reveal layers; treble changes glyph texture |
+| Vector scope | Dual harmonic traces and a central Lissajous figure | Bass raises amplitude; mids widen the centre; treble adds harmonic detail; artistic traces rather than a calibrated waveform |
+| Circuit board | Right-angle traces, nodes and travelling machine-code glyphs | Bass pulses nodes; mids deflect packets; treble speeds packet travel |
+
+## Colours, glyphs and fonts
+
+Open **Colours & glyphs** below the scene controls. By default **Use each scene’s suggested look** applies a curated palette and alphabet when changing scenes, including during auto-switching. Original scenes remain available with refreshed default looks.
+
+- Eight palettes: Terminal spectrum, Tron cyan/orange, Green phosphor, Amber terminal, Sakura neon, Arctic blue, Solar flare and Ultraviolet.
+- Five glyph alphabets: ASCII/geometric, Japanese katakana, Korean Hangul jamo, Cyrillic, and binary/machine code. These are decorative characters, not translated messages. Interface text remains in English.
+- Three font styles: Script-friendly mono, Classic console and Typewriter mono. East Asian alphabets use wider cells and script-appropriate system font fallbacks to avoid clipping. No external font downloads; exact letterforms depend on installed fonts.
+- Choosing a palette or alphabet disables the suggested-look option so your selection survives scene changes. Re-enable it to restore curated combinations. Font style remains your choice.
+- **Shuffle look** chooses a random palette/alphabet combination without changing the scene or audio source.
 
 ## Audio response
 
@@ -83,6 +101,6 @@ Controls are keyboard accessible, status updates are announced, and the canvas h
 
 ## Verify / edit
 
-No build step. Edit `index.html`, `style.css`, `core.js`, `scenes.js`, `crt.js` or `app.js`, then refresh. After updating from an earlier version, restart the local server to serve new script files, then refresh the page.
+No build step. Edit `index.html`, `style.css`, `core.js`, `scenes.js`, `crt.js`, `looks.js` or `app.js`, then refresh. After updating from an earlier version, restart the local server to serve new script files, then refresh the page.
 
 Run `node --test tests/*.test.cjs` for FFT band separation, silence/gain limits, hypercube geometry, scene output, and browser-capture connection/cleanup checks. Capture lifecycle checks use simulated browser streams; actual tab selection and audio availability depend on the browser and require a manual sharing-picker check.

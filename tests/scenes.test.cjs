@@ -10,7 +10,7 @@ test('each new scene produces distinct finite glyph compositions at rest and wit
       assert.ok(points.length>100&&points.length<30000,`${scene}: bounded rendering work`);
       assert.ok(points.every(p=>p.every(Number.isFinite)),`${scene}: finite coordinates`);
       assert.ok(points.every(p=>p[2]>=0&&p[2]<7&&p[3]>=0&&p[3]<14),`${scene}: palette and glyph range`);
-      return JSON.stringify(points.slice(0,200));
+      return JSON.stringify(points);
     };
     const idle=capture(10,{bass:0,mid:0,treble:0});
     signatures.add(idle);
@@ -19,5 +19,5 @@ test('each new scene produces distinct finite glyph compositions at rest and wit
     capture(100000,{bass:1,mid:1,treble:1});
   }
   assert.equal(signatures.size,names.length);
-  assert.equal(names.length,5);
+  assert.equal(names.length,13);
 });

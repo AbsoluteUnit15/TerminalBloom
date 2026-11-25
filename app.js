@@ -4,8 +4,8 @@
   const $ = id => document.getElementById(id);
   const canvas=$('art'), ctx=canvas.getContext('2d',{alpha:false}), audio=$('audio');
   const {bands,cube,edges}=TerminalMath;
-  const palette=['#24e6fa','#fa43cf','#ffe45d','#ff9440','#acfa45','#5485ff','#eefaff'];
-  const glyphs=['·','+','×','*','◇',':','≋','░','○','/','\\','─','│','•'];
+  const {palettes,alphabets,recommended}=TerminalLooks;
+  let palette=palettes.spectrum.colors,glyphs=Array.from(alphabets.symbols.glyphs),alphabet='symbols',fontStyle='native';
   let width=0,height=0,cols=0,rows=0,cellW=8,cellH=12,grid=new Uint8Array(0),colors=new Uint8Array(0);
   let atlas,atlasCols=glyphs.length;
   let clock=0,last=performance.now(),frames=0,fps=60,fpsClock=0,frozen=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -27,14 +27,15 @@
     const dpr=Math.min(devicePixelRatio||1,2);
     canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.imageSmoothingEnabled=false;
-    cellH=density==='high'?10:density==='low'?16:12;cellW=cellH*.65;
+    cellH=density==='high'?10:density==='low'?16:12;cellW=cellH*alphabets[alphabet].width;
     cols=Math.ceil(width/cellW);rows=Math.ceil(height/cellH);
     grid=new Uint8Array(cols*rows);colors=new Uint8Array(cols*rows);
     atlas=document.createElement('canvas');
     const aw=Math.ceil(cellW*dpr),ah=Math.ceil(cellH*dpr);
     atlas.width=aw*atlasCols;atlas.height=ah*palette.length;
-    const a=atlas.getContext('2d');a.font=`${Math.round(cellH*.93*dpr)}px Consolas, monospace`;a.textAlign='center';a.textBaseline='middle';
-    palette.forEach((color,y)=>{a.fillStyle=color;glyphs.forEach((glyph,x)=>a.fillText(glyph,(x+.5)*aw,(y+.5)*ah));});
+    const font=fontStyle==='classic'?'"Lucida Console", '+alphabets[alphabet].font:fontStyle==='typewriter'?'"Courier New", '+alphabets[alphabet].font:alphabets[alphabet].font;
+    const a=atlas.getContext('2d');a.font=`${Math.round(cellH*.93*dpr)}px ${font}`;a.textAlign='center';a.textBaseline='middle';
+    palette.forEach((color,y)=>{a.fillStyle=color;glyphs.forEach((glyph,x)=>a.fillText(glyph,(x+.5)*aw,(y+.5)*ah,aw*.96));});
   }
   new ResizeObserver(resize).observe(canvas);
   function plot(x,y,color,glyph=1) {
@@ -98,7 +99,7 @@
     for(let i=0;i<grid.length;i++)if(grid[i]) {
       ctx.drawImage(atlas,(grid[i]-1)*aw,colors[i]*ah,aw,ah,(i%cols)*cellW,Math.floor(i/cols)*cellH,cellW,cellH);
     }
-    if(hud){ctx.save();if(glass){ctx.translate(width*.055,height*.06);ctx.scale(.89,.88);}drawHUD(t);ctx.restore();}
+    if(hud){ctx.save();if(glass){ctx.translate(width*.005,height*.005);ctx.scale(.99,.99);}drawHUD(t);ctx.restore();}
     if(crt&&!crtRenderer.available) {
       ctx.fillStyle=`rgba(0,0,0,${scanIntensity*.65})`;for(let y=1;y<height;y+=4)ctx.fillRect(0,y,width,2);
     }
@@ -266,11 +267,28 @@
   $('motion').oninput=()=>{speed=Number($('motion').value);};
   $('density').onchange=()=>{density=$('density').value;resize();};
   const sceneNames=['bloom',...TerminalScenes.names];
-  function selectScene(value){scene=value;sceneTime=0;$('scene').value=value;}
+  function applyLook(paletteName,alphabetName){
+    palette=palettes[paletteName].colors;alphabet=alphabetName;glyphs=Array.from(alphabets[alphabet].glyphs);
+    $('palette').value=paletteName;$('alphabet').value=alphabetName;resize();
+  }
+  function selectScene(value){
+    scene=value;sceneTime=0;$('scene').value=value;
+    canvas.setAttribute('aria-label',`Animated retro terminal art: ${value}, reacting to bass, mids and treble.`);
+    if($('sceneLook').checked)applyLook(...recommended[value]);
+  }
   function nextScene(){selectScene(sceneNames[(sceneNames.indexOf(scene)+1)%sceneNames.length]);}
   $('scene').onchange=()=>selectScene($('scene').value);
   $('nextScene').onclick=nextScene;
   $('autoscene').onchange=()=>{sceneTime=0;};
+  $('sceneLook').onchange=()=>{if($('sceneLook').checked)applyLook(...recommended[scene]);};
+  $('palette').onchange=()=>{$('sceneLook').checked=false;applyLook($('palette').value,alphabet);};
+  $('alphabet').onchange=()=>{$('sceneLook').checked=false;applyLook($('palette').value,$('alphabet').value);};
+  $('fontStyle').onchange=()=>{fontStyle=$('fontStyle').value;resize();};
+  $('shuffleLook').onclick=()=>{
+    const colors=Object.keys(palettes),scripts=Object.keys(alphabets);$('sceneLook').checked=false;
+    applyLook(colors[Math.floor(Math.random()*colors.length)],scripts[Math.floor(Math.random()*scripts.length)]);
+  };
+  if(document.fonts?.ready)document.fonts.ready.then(resize);
   $('crt').onchange=()=>{crt=$('crt').checked;};$('hud').onchange=()=>{hud=$('hud').checked;};
   $('scanIntensity').oninput=()=>{scanIntensity=Number($('scanIntensity').value);};
   $('glass').onchange=()=>{glass=$('glass').checked;$('stage').classList.toggle('crt-glass',glass);};

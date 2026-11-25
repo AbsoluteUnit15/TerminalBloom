@@ -7,7 +7,7 @@ function setup({fullscreen=true}={}){
   const el=id=>{if(!elements.has(id))elements.set(id,{value:'1',checked:false,setAttribute(){},getContext(){return {};},focus(){},blur(){}});return elements.get(id);};
   const document={getElementById:el,activeElement:el('hide'),addEventListener:(name,cb)=>handlers[name]=cb,body:{classList:{toggle:k=>classes.has(k)?classes.delete(k):classes.add(k),contains:k=>classes.has(k),remove:k=>classes.delete(k)}},exitFullscreen:async()=>{exits++;document.fullscreenElement=null;}};
   if(fullscreen)el('stage').requestFullscreen=async()=>{requests++;document.fullscreenElement=el('stage');};
-  vm.runInNewContext(fs.readFileSync(require.resolve('../app.js'),'utf8'),{document,window:{addEventListener(){}},navigator:{},TerminalCRT:require('../crt.js'),TerminalMath:require('../core.js'),TerminalScenes:require('../scenes.js'),performance:{now:()=>0},matchMedia:()=>({matches:false}),ResizeObserver:class{observe(){}},requestAnimationFrame(){},Uint8Array,URL});
+  vm.runInNewContext(fs.readFileSync(require.resolve('../app.js'),'utf8'),{document,window:{addEventListener(){}},navigator:{},TerminalCRT:require('../crt.js'),TerminalLooks:require('../looks.js'),TerminalMath:require('../core.js'),TerminalScenes:require('../scenes.js'),performance:{now:()=>0},matchMedia:()=>({matches:false}),ResizeObserver:class{observe(){}},requestAnimationFrame(){},Uint8Array,URL});
   function key(key,tagName='BODY',extra={}){let prevented=false;handlers.keydown({key,code:key===' '?'Space':`Key${key.toUpperCase()}`,target:{tagName},preventDefault(){prevented=true;},...extra});return prevented;}
   return {key,classes,el,get requests(){return requests;},get exits(){return exits;}};
 }
